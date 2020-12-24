@@ -7,4 +7,4 @@ Some of the contents include:
 
 This will remain unfinished unless I gain motivation to finish it.
 
-- Made by Illusion -
+- Made by Illusion
