@@ -16,11 +16,6 @@ public final class Main extends JavaPlugin {
         getCommand("nightarena").setExecutor(new DuelCommands());
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
     private boolean setupEconomy() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
             return false;
