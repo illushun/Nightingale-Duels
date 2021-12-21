@@ -3,32 +3,32 @@ public class CreateMatch {
     public static Map<String, Double> duelBet = Maps.newHashMap();
     public static Map<String, String> requestDuelName = Maps.newHashMap();
 
-    public static boolean userHasInvitation(String name) {
+    public static boolean UserHasInvitation(String name) {
        return requestDuelName.containsValue(name);
     }
 
-    public static boolean alreadyRequested(Player ply) {
+    public static boolean AlreadyRequestedDuel(Player ply) {
         return requestDuel.containsKey(ply.getName());
     }
 
-    public static String getTimeRequested(Player ply) {
-        Long previousTime = System.currentTimeMillis() - requestDuel.get(ply.getName());
-        return HandleTime.convertMS(previousTime);
-    }
-
-    public static Long getTimeRequestedMS(Player ply) {
+    public static Long GetTimeRequestedDuelMS(Player ply) {
         return requestDuel.get(ply.getName());
     }
 
-    public static boolean requestExpired(Long time) {
+    public static String GetTimeRequestedDuel(Player ply) {
+        long previousTime = System.currentTimeMillis() - requestDuel.get(ply.getName());
+        return HandleTime.convertMS(previousTime);
+    }
+
+    public static boolean DuelRequestExpired(Long time) {
         Long calcTime = 600 * 1000L;
-        Long cooldownTime = time + calcTime;
-        Long retrieveTime = cooldownTime - System.currentTimeMillis();
+        long cooldownTime = time + calcTime;
+        long retrieveTime = cooldownTime - System.currentTimeMillis();
         return retrieveTime <= 0;
     }
 
-    public static void removeOldRequest(Player ply) {
-        if (!alreadyRequested(ply)) {
+    public static void RemoveOldDuelRequest(Player ply) {
+        if (!AlreadyRequestedDuel(ply)) {
             return;
         }
 
@@ -37,9 +37,9 @@ public class CreateMatch {
         duelBet.remove(ply.getName());
     }
 
-    public static boolean addRequest(Player ply, String name, double bet) {
-        if (alreadyRequested(ply)) {
-            removeOldRequest(ply);
+    public static boolean AddDuelRequest(Player ply, String name, double bet) {
+        if (AlreadyRequestedDuel(ply)) {
+            RemoveOldDuelRequest(ply);
             return false;
         }
 
