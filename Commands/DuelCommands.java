@@ -13,7 +13,7 @@ public class DuelCommands implements CommandExecutor {
 
                 String arenaName = args[1];
 
-                ArenaCreation.createArena(ply, arenaName);
+                new ArenaCreation(arenaName).CreateArena(ply);
                 ply.sendMessage(ChatColor.GREEN + "Arena " + ChatColor.BOLD + arenaName + ChatColor.GREEN + " has been created.");
             }
             else if (commandName.equalsIgnoreCase("set")) {
@@ -29,7 +29,7 @@ public class DuelCommands implements CommandExecutor {
                     return true;
                 }
 
-                if (ArenaCreation.setArenaLocation(arenaName, position, ply.getLocation())) {
+                if (new ArenaCreation(arenaName).SetArenaLocation(position, ply.getLocation())) {
                     ply.sendMessage(ChatColor.GREEN + "Arena " + arenaName + " " + position + " successfully set!");
                     return true;
                 }
@@ -52,12 +52,12 @@ public class DuelCommands implements CommandExecutor {
 
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         if (onlinePlayer.getName().equalsIgnoreCase(playerName)) {
-                            if (CreateMatch.alreadyRequested(ply) && !CreateMatch.requestExpired(CreateMatch.getTimeRequestedMS(ply))) {
-                                ply.sendMessage(ChatColor.RED + "You last requested " + CreateMatch.getTimeRequested(ply) + " ago. You can request every 10 minutes.");
+                            if (CreateMatch.AlreadyRequestedDuel(ply) && !CreateMatch.DuelRequestExpired(CreateMatch.GetTimeRequestedDuelMS(ply))) {
+                                ply.sendMessage(ChatColor.RED + "You last requested " + CreateMatch.GetTimeRequestedDuel(ply) + " ago. You can request every 10 minutes.");
                                 return true;
                             }
 
-                            if (!CreateMatch.addRequest(ply, playerName, betAmount)) {
+                            if (!CreateMatch.AddDuelRequest(ply, playerName, betAmount)) {
                                 ply.sendMessage(ChatColor.RED + "Unable to send " + playerName + " a duel request!");
                                 return true;
                             }
@@ -73,13 +73,13 @@ public class DuelCommands implements CommandExecutor {
                 {
                     case "accept": /* Doing this for now until the functions are made */
                     case "deny":
-                        if (!CreateMatch.userHasInvitation(ply.getName())) {
+                        if (!CreateMatch.UserHasInvitation(ply.getName())) {
                             ply.sendMessage(ChatColor.RED + "You don't have a pending duel invite.");
                             return true;
                         }
                         break;
                     case "cancel":
-                        if (!CreateMatch.alreadyRequested(ply)) {
+                        if (!CreateMatch.AlreadyRequestedDuel(ply)) {
                             ply.sendMessage(ChatColor.RED + "You haven't created a duel invite.");
                             return true;
                         }
@@ -101,28 +101,28 @@ public class DuelCommands implements CommandExecutor {
                 switch (commandAction)
                 {
                     case "create":
-                        if (CreateKit.createKit(arenaName)) {
+                        if (new CreateKit(arenaName).AddKit()) {
                             ply.sendMessage(ChatColor.GREEN + "The kit " + arenaName + " has successfully been created.");
                             return true;
                         }
                         ply.sendMessage(ChatColor.RED + "Unable to create kit " + arenaName + "! (Check console)");
                         break;
                     case "delete":
-                        if (CreateKit.removeKit(arenaName)) {
+                        if (new CreateKit(arenaName).RemoveKit()) {
                             ply.sendMessage(ChatColor.GREEN + "The kit " + arenaName + " has successfully been removed.");
                             return true;
                         }
                         ply.sendMessage(ChatColor.RED + "Unable to remove kit " + arenaName + "! (Check console)");
                         break;
                     case "additem":
-                        if (KitItems.addItemToKit(ply, arenaName)) {
+                        if (new KitItems(ply, arenaName).AddItem()) {
                             ply.sendMessage(ChatColor.GREEN + "Added the item in your hand to kit " + arenaName + ".");
                             return true;
                         }
                         ply.sendMessage(ChatColor.RED + "Unable to add the item to kit " + arenaName + "! (Check console)");
                         break;
                     case "removeitem":
-                        if (KitItems.removeItemFromKit(ply, arenaName)) {
+                        if (new KitItems(ply, arenaName).RemoveItem()) {
                             ply.sendMessage(ChatColor.GREEN + "Removed the item in your hand from kit " + arenaName + ".");
                             return true;
                         }
