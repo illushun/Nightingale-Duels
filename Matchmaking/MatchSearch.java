@@ -3,8 +3,38 @@ public class MatchSearch {
     public static Map<Player, Player> playersInMatch = Maps.newHashMap();
     public static Map<String, Boolean> mapTaken = Maps.newHashMap();
 
-    public static boolean searchForMatch(Player ply) {
-        if (playerInQueue(ply.getName())) {
+    private Player ply;
+
+    public MatchSearch() {}
+
+    public MatchSearch(Player ply) {
+        this.ply = ply;
+    }
+
+    public static boolean PlayerInQueue(String name) {
+        return playersQueued.contains(name);
+    }
+
+    public static void LoadMaps() {
+        if (ArenaCreation.arenas.isEmpty()) {
+            return;
+        }
+
+        for (String maps : ArenaCreation.arenas.keySet()) {
+            mapTaken.put(maps, false);
+        }
+    }
+
+    public static boolean MapTaken(String name) {
+        if (!mapTaken.containsKey(name)) {
+            return true;
+        }
+
+        return mapTaken.get(name);
+    }
+
+    public boolean SearchForMatch() {
+        if (PlayerInQueue(ply.getName())) {
             return false;
         }
 
@@ -12,8 +42,8 @@ public class MatchSearch {
         return true;
     }
 
-    public static boolean stopSearch(Player ply) {
-        if (!playerInQueue(ply.getName())) {
+    public boolean StopSearch() {
+        if (!PlayerInQueue(ply.getName())) {
             return false;
         }
 
@@ -21,11 +51,7 @@ public class MatchSearch {
         return true;
     }
 
-    public static boolean playerInQueue(String name) {
-        return playersQueued.contains(name);
-    }
-
-    public static boolean matchPlayers(Player ply) {
+    public boolean MatchPlayers() {
         boolean canFindPlayers;
 
         while (true) {
@@ -50,28 +76,10 @@ public class MatchSearch {
         }
     }
 
-    public static void loadMaps() {
-        if (ArenaCreation.arenas.isEmpty()) {
-            return;
-        }
+    public boolean TeleportPlayers(String arenaName) {
+        LoadMaps();
 
-        for (String maps : ArenaCreation.arenas.keySet()) {
-            mapTaken.put(maps, false);
-        }
-    }
-
-    public static boolean mapTaken(String name) {
-        if (!mapTaken.containsKey(name)) {
-            return true;
-        }
-
-        return mapTaken.get(name);
-    }
-
-    public static boolean teleportPlayers(String arenaName, Player ply) {
-        loadMaps();
-
-        if (mapTaken(arenaName)) {
+        if (MapTaken(arenaName)) {
             return false;
         }
 
@@ -80,13 +88,14 @@ public class MatchSearch {
         }
 
         Player getOpponent = playersInMatch.get(ply);
-        Location firstPos = ArenaCreation.getArenaLocation(arenaName, "_firstPos");
-        Location secondPos = ArenaCreation.getArenaLocation(arenaName, "_secondPos");
+        new ArenaCreation("");
+        Location firstPos = new ArenaCreation(arenaName).GetArenaLocation("_firstPos");
+        Location secondPos = new ArenaCreation(arenaName).GetArenaLocation("_secondPos");
         if (firstPos != null && secondPos != null) {
             ply.teleport(firstPos);
             getOpponent.teleport(secondPos);
             // need to clear and save old inv
-            if (KitItems.giveKitItems(ply, arenaName)) {
+            if (new KitItems(ply, arenaName).GiveKitItems()) {
                 ply.sendMessage(ChatColor.GREEN + "Added kit " + arenaName + " to your inventory.");
             }
             else {
